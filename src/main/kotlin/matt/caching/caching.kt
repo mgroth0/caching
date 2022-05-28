@@ -3,12 +3,11 @@ package matt.caching
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import matt.async.ThreadInterface.Canceller
-import matt.kjlib.date.Duration
+import matt.async.date.Duration
+import matt.caching.ThreadInterface.Canceller
 import matt.kjlib.lang.jlang.runtime
 import matt.kjlib.log.massert
 import matt.kjlib.str.tab
-import matt.kjlib.str.taball
 import matt.klib.lang.go
 import java.io.OutputStream
 import java.io.PipedInputStream
@@ -22,7 +21,6 @@ import java.util.concurrent.Future
 import java.util.concurrent.Semaphore
 import kotlin.concurrent.thread
 import kotlin.contracts.contract
-import kotlin.random.Random
 
 
 // Check out FutureTasks too!

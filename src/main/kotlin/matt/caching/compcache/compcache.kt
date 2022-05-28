@@ -7,14 +7,13 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
-import matt.kjlib.async.FutureMap
-import matt.kjlib.async.MutSemMap
-import matt.kjlib.async.every
-import matt.kjlib.async.mutSemMapOf
-import matt.klib.commons.CACHE_FOLDER
-import matt.kjlib.compcache.ComputeCache.Companion.computeCaches
-import matt.kjlib.date.sec
-import matt.kjlib.date.tic
+import matt.async.date.sec
+import matt.async.date.tic
+import matt.caching.FutureMap
+import matt.caching.MutSemMap
+import matt.caching.compcache.ComputeCache.Companion.computeCaches
+import matt.caching.every
+import matt.caching.mutSemMapOf
 import matt.kjlib.file.isBlank
 import matt.kjlib.file.size
 import matt.kjlib.file.text
@@ -23,6 +22,7 @@ import matt.kjlib.map.lazyMutableMap
 import matt.kjlib.str.addSpacesUntilLengthIs
 import matt.kjlib.str.tab
 import matt.kjlib.str.truncate
+import matt.klib.commons.CACHE_FOLDER
 import matt.klib.commons.get
 import matt.klib.lang.go
 import matt.reflect.subclasses
@@ -164,8 +164,8 @@ abstract class ComputeInput<O> {
 	t.toc("starting with file size = ${cacheFile.size()}")
 	val s = cacheFile.text
 	t.toc("read text length = ${s.length}")
-	matt.caching.compcache.ComputeCache.jsonFormat.decodeFromString<ComputeCache<ComputeInput<O>, O>>(s)
-	return matt.caching.compcache.ComputeCache.jsonFormat.decodeFromString<ComputeCache<ComputeInput<O>, O>>(s).also {
+	ComputeCache.jsonFormat.decodeFromString<ComputeCache<ComputeInput<O>, O>>(s)
+	return ComputeCache.jsonFormat.decodeFromString<ComputeCache<ComputeInput<O>, O>>(s).also {
 	  t.toc("finished decoding")
 	}
   }
@@ -173,9 +173,9 @@ abstract class ComputeInput<O> {
   //  abstract fun loadCache(): ComputeCache<, O>
 
   fun maybeLoad() {
-	if (!matt.caching.compcache.ComputeCache.cacheHasBeenSetUp[this::class]!! && cacheFile.exists() && !cacheFile.isBlank()) {
+	if (!ComputeCache.cacheHasBeenSetUp[this::class]!! && cacheFile.exists() && !cacheFile.isBlank()) {
 	  computeCaches[this::class] = loadCache()
-	  matt.caching.compcache.ComputeCache.cacheHasBeenSetUp[this::class] = true
+	  ComputeCache.cacheHasBeenSetUp[this::class] = true
 	}
   }
 
