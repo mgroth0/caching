@@ -19,9 +19,9 @@ import matt.kjlib.file.size
 import matt.kjlib.file.text
 import matt.kjlib.file.write
 import matt.kjlib.map.lazyMutableMap
-import matt.kjlib.str.addSpacesUntilLengthIs
-import matt.kjlib.str.tab
-import matt.kjlib.str.truncate
+import matt.klib.str.addSpacesUntilLengthIs
+import matt.klib.str.tab
+import matt.klib.str.truncate
 import matt.klib.commons.CACHE_FOLDER
 import matt.klib.commons.get
 import matt.klib.lang.go

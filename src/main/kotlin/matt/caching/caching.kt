@@ -7,7 +7,7 @@ import matt.async.date.Duration
 import matt.caching.ThreadInterface.Canceller
 import matt.kjlib.lang.jlang.runtime
 import matt.kjlib.log.massert
-import matt.kjlib.str.tab
+import matt.klib.str.tab
 import matt.klib.lang.go
 import java.io.OutputStream
 import java.io.PipedInputStream
