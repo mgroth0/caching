@@ -25,6 +25,7 @@ import matt.klib.file.ext.isBlank
 import matt.klib.file.ext.text
 import matt.klib.file.ext.write
 import matt.klib.lang.go
+import matt.reflect.NeedClassToShowThisDepIsBeingUsed
 import matt.reflect.subclasses
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
@@ -140,6 +141,7 @@ abstract class ComputeInput<O> {
 		every(5.sec) {
 		  println("ComputeCache Report")
 		  tab("Name\t\tSize\t\tFull")
+		  NeedClassToShowThisDepIsBeingUsed()
 		  ComputeInput::class.subclasses().forEach {
 			val cache = (it.companionObjectInstance as ComputeCache<*, *>)
 			val s = if (cache.enableCache) cache.computeCache.size else "DISABLED"
