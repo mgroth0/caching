@@ -133,6 +133,7 @@ class ComputeCache<I, O> private constructor(val enableCache: Boolean = true) {
 //  }
 //}
 
+val maybeHere get() = println(NeedClassToShowThisDepIsBeingUsed("abc"))
 
 abstract class ComputeInput<O> {
   companion object {
@@ -140,7 +141,6 @@ abstract class ComputeInput<O> {
 	  if (PRINT_REPORTS) {
 		every(5.sec) {
 		  println("ComputeCache Report")
-		  println(NeedClassToShowThisDepIsBeingUsed("abc"))
 		  tab("Name\t\tSize\t\tFull")
 		  ComputeInput::class.subclasses().forEach {
 			val cache = (it.companionObjectInstance as ComputeCache<*, *>)
