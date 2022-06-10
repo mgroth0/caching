@@ -15,7 +15,7 @@ import matt.caching.compcache.ComputeCache.Companion.computeCaches
 import matt.caching.every
 import matt.caching.mutSemMapOf
 import matt.kjlib.file.size
-import matt.klib.map.lazyMutableMap
+import matt.stream.map.lazyMutableMap
 import matt.klib.str.addSpacesUntilLengthIs
 import matt.klib.str.tab
 import matt.klib.str.truncate
