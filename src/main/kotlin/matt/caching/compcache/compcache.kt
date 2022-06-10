@@ -140,8 +140,8 @@ abstract class ComputeInput<O> {
 	  if (PRINT_REPORTS) {
 		every(5.sec) {
 		  println("ComputeCache Report")
+		  println(NeedClassToShowThisDepIsBeingUsed())
 		  tab("Name\t\tSize\t\tFull")
-		  NeedClassToShowThisDepIsBeingUsed()
 		  ComputeInput::class.subclasses().forEach {
 			val cache = (it.companionObjectInstance as ComputeCache<*, *>)
 			val s = if (cache.enableCache) cache.computeCache.size else "DISABLED"
