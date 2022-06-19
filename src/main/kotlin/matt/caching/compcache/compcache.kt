@@ -21,9 +21,6 @@ import matt.klib.str.tab
 import matt.klib.str.truncate
 import matt.klib.commons.CACHE_FOLDER
 import matt.klib.commons.get
-import matt.klib.file.ext.isBlank
-import matt.klib.file.ext.text
-import matt.klib.file.ext.write
 import matt.klib.lang.go
 import matt.reflect.NeedClassToShowThisDepIsBeingUsed
 import matt.reflect.subclasses
