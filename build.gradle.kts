@@ -1,11 +1,11 @@
 modtype = LIB
 
 dependencies {
-  implementation(projects.kj.kjlib.kjlibLang)
-  implementation(projects.kj.kjlib)
+  implementation(projects.k.kjlib.kjlibLang)
+  implementation(projects.k.kjlib)
   implementation(projects.k.async)
   api(libs.kotlinx.serialization.json)
-  implementation(projects.kj.reflect)
+  implementation(projects.k.reflect)
 }
 
 plugins {
