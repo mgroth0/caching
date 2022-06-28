@@ -19,8 +19,7 @@ import matt.stream.map.lazyMutableMap
 import matt.klib.str.addSpacesUntilLengthIs
 import matt.klib.str.tab
 import matt.klib.str.truncate
-import matt.klib.commons.CACHE_FOLDER
-import matt.klib.commons.get
+import matt.file.commons.CACHE_FOLDER
 import matt.klib.lang.go
 import matt.reflect.NeedClassToShowThisDepIsBeingUsed
 import matt.reflect.subclasses
