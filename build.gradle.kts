@@ -6,13 +6,13 @@ apis(
   libs.kotlinx.serialization.json
 )
 
-implementations(
-  projects.k.kjlib.lang,
-  projects.k.stream,
-  ":k:file".jvm(),
-  projects.k.async,
-  projects.k.reflect
-)
+implementations {
+  kjlibLang
+  stream
+  file
+  async
+  reflect
+}
 
 
 plugins {
