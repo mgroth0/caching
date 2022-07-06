@@ -14,12 +14,12 @@ import matt.caching.MutSemMap
 import matt.caching.compcache.ComputeCache.Companion.computeCaches
 import matt.caching.every
 import matt.caching.mutSemMapOf
-import matt.kjlib.file.size
 import matt.stream.map.lazyMutableMap
 import matt.klib.str.addSpacesUntilLengthIs
 import matt.klib.str.tab
 import matt.klib.str.truncate
 import matt.file.commons.CACHE_FOLDER
+import matt.file.size
 import matt.klib.lang.go
 import matt.reflect.NeedClassToShowThisDepIsBeingUsed
 import matt.reflect.subclasses
