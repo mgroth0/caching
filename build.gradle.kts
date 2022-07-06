@@ -1,5 +1,3 @@
-println("eval caching 1: ")
-
 apis(
   libs.kotlinx.serialization.json
 )
