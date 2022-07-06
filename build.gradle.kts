@@ -1,7 +1,5 @@
 println("eval caching 1: ")
 
-modtype = LIB
-
 apis(
   libs.kotlinx.serialization.json
 )
