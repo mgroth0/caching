@@ -171,7 +171,7 @@ abstract class ComputeInput<O> {
   //  abstract fun loadCache(): ComputeCache<, O>
 
   fun maybeLoad() {
-	if (!ComputeCache.cacheHasBeenSetUp[this::class]!! && cacheFile.exists() && !cacheFile.isBlank()) {
+	if (!ComputeCache.cacheHasBeenSetUp[this::class] && cacheFile.exists() && !cacheFile.isBlank()) {
 	  computeCaches[this::class] = loadCache()
 	  ComputeCache.cacheHasBeenSetUp[this::class] = true
 	}
@@ -184,7 +184,7 @@ abstract class ComputeInput<O> {
   @Suppress("UNCHECKED_CAST")
   fun findOrCompute(): O {
 	maybeLoad()
-	val cache = computeCaches[this::class]!!
+	val cache = computeCaches[this::class]
 	return if (!cache.enableCache) {
 	  compute()
 	} else run {
@@ -212,7 +212,7 @@ abstract class UpdaterComputeInput<K, V>: ComputeInput<Map<K, V>>() {
   @Suppress("UNCHECKED_CAST")
   inline fun findOrCompute(inPlaceUpdateOp: ((Int)->Unit)): Map<K, V> {
 	maybeLoad()
-	val cache = computeCaches[this::class]!!
+	val cache = computeCaches[this::class]
 	return if (!cache.enableCache) {
 	  compute(inPlaceUpdateOp)
 	} else run {
