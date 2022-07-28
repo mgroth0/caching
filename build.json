@@ -1,5 +1,7 @@
 {
-    "modType": "LIB",
+    "modType": {
+        "type": "matt.klib.mod.LIB"
+    },
     "dependencies": [
         {
             "type": "matt.mstruct.BuildJsonLibDependency",
@@ -31,5 +33,6 @@
             "cfg": "implementation",
             "path": ":k:reflect"
         }
-    ]
+    ],
+    "note": null
 }
