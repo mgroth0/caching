@@ -19,7 +19,6 @@ import matt.klib.str.addSpacesUntilLengthIs
 import matt.klib.str.tab
 import matt.klib.str.truncate
 import matt.file.commons.CACHE_FOLDER
-import matt.file.size
 import matt.klib.lang.go
 import matt.reflect.NeedClassToShowThisDepIsBeingUsed
 import matt.reflect.subclasses
