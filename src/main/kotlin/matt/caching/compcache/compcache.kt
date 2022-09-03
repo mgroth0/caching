@@ -15,9 +15,9 @@ import matt.async.safe.mutSemMapOf
 import matt.async.schedule.every
 import matt.caching.compcache.ComputeCache.Companion.computeCaches
 import matt.stream.map.lazyMutableMap
-import matt.klib.str.addSpacesUntilLengthIs
-import matt.klib.str.tab
-import matt.klib.str.truncate
+import matt.prim.str.addSpacesUntilLengthIs
+import matt.prim.str.tab
+import matt.prim.str.truncate
 import matt.file.commons.CACHE_FOLDER
 import matt.lang.go
 import matt.reflect.NeedClassToShowThisDepIsBeingUsed
