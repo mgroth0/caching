@@ -19,7 +19,7 @@ import matt.klib.str.addSpacesUntilLengthIs
 import matt.klib.str.tab
 import matt.klib.str.truncate
 import matt.file.commons.CACHE_FOLDER
-import matt.klib.lang.go
+import matt.lang.go
 import matt.reflect.NeedClassToShowThisDepIsBeingUsed
 import matt.reflect.subclasses
 import kotlin.reflect.KClass
