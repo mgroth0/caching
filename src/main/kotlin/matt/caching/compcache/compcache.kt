@@ -8,7 +8,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import matt.time.dur.sec
-import matt.async.date.tic
+import matt.time.profile.tic
 import matt.async.par.FutureMap
 import matt.async.safe.MutSemMap
 import matt.async.safe.mutSemMapOf
@@ -16,7 +16,7 @@ import matt.async.schedule.every
 import matt.caching.compcache.ComputeCache.Companion.computeCaches
 import matt.stream.map.lazyMutableMap
 import matt.prim.str.addSpacesUntilLengthIs
-import matt.prim.str.tab
+import matt.log.tab
 import matt.prim.str.truncate
 import matt.file.commons.CACHE_FOLDER
 import matt.lang.go
