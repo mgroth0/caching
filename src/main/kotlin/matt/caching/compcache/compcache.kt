@@ -7,7 +7,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
-import matt.async.date.sec
+import matt.time.dur.sec
 import matt.async.date.tic
 import matt.async.par.FutureMap
 import matt.async.safe.MutSemMap
