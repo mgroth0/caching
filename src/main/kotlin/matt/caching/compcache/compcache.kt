@@ -8,7 +8,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import matt.time.dur.sec
-import matt.time.profile.tic
+import matt.log.profile.tic
 import matt.async.par.FutureMap
 import matt.async.safe.MutSemMap
 import matt.async.safe.mutSemMapOf
