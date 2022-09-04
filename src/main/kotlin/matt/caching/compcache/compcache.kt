@@ -14,7 +14,7 @@ import matt.async.safe.MutSemMap
 import matt.async.safe.mutSemMapOf
 import matt.async.schedule.every
 import matt.caching.compcache.ComputeCache.Companion.computeCaches
-import matt.stream.map.lazyMutableMap
+import matt.collect.map.lazyMutableMap
 import matt.prim.str.addSpacesUntilLengthIs
 import matt.log.tab
 import matt.prim.str.truncate
