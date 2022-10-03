@@ -20,6 +20,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:reflect"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:log:profile"
 	}
   ],
   "note" :         null
