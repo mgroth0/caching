@@ -15,11 +15,11 @@ object ComputeInputReporter {
   val start = SingleCall {
 	every(5.sec) {
 	  println("ComputeCache Report")
-	  tab<Any>("Name\t\tSize\t\tFull")
+	  tab("Name\t\tSize\t\tFull")
 	  ComputeInput::class.mattSubClasses().forEach {
 		val cache = (it.companionObjectInstance as ComputeCache<*, *>)
 		val s = if (cache.enableCache) cache.computeCache.size else "DISABLED"
-		tab<Any>(
+		tab(
 		  "${it.simpleName!!.addSpacesUntilLengthIs(30).truncate(30)}\t\t${s}\t\t${cache.full}"
 		)
 	  }

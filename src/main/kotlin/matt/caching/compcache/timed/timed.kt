@@ -1,8 +1,8 @@
 package matt.caching.compcache.timed
 
 import matt.caching.compcache.ComputeInput
-import matt.log.profile.Stopwatch
-import matt.log.profile.stopwatch
+import matt.log.profile.stopwatch.Stopwatch
+import matt.log.profile.stopwatch.stopwatch
 
 abstract class TimedComputeInput<O>: ComputeInput<O>() {
   private var theStopwatch: Stopwatch? = null
