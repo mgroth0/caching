@@ -7,7 +7,7 @@ import matt.log.tab
 import matt.model.obj.single.SingleCall
 import matt.prim.str.addSpacesUntilLengthIs
 import matt.prim.str.truncate
-import matt.reflect.subclasses
+import matt.reflect.reflections.mattSubClasses
 import matt.time.dur.sec
 import kotlin.reflect.full.companionObjectInstance
 
@@ -16,7 +16,7 @@ object ComputeInputReporter {
 	every(5.sec) {
 	  println("matt.caching.compcache.cache.ComputeCache Report")
 	  tab<Any>("Name\t\tSize\t\tFull")
-	  ComputeInput::class.subclasses().forEach {
+	  ComputeInput::class.mattSubClasses().forEach {
 		val cache = (it.companionObjectInstance as ComputeCache<*, *>)
 		val s = if (cache.enableCache) cache.computeCache.size else "DISABLED"
 		tab<Any>(
