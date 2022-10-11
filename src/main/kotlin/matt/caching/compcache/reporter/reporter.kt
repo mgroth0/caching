@@ -14,7 +14,7 @@ import kotlin.reflect.full.companionObjectInstance
 object ComputeInputReporter {
   val start = SingleCall {
 	every(5.sec) {
-	  println("matt.caching.compcache.cache.ComputeCache Report")
+	  println("ComputeCache Report")
 	  tab<Any>("Name\t\tSize\t\tFull")
 	  ComputeInput::class.mattSubClasses().forEach {
 		val cache = (it.companionObjectInstance as ComputeCache<*, *>)
