@@ -1,7 +1,7 @@
 package matt.caching.compcache.reporter
 
 import matt.async.schedule.every
-import matt.caching.compcache.ComputeInput
+import matt.caching.compcache.GlobalRAMComputeInput
 import matt.caching.compcache.cache.ComputeCache
 import matt.log.tab
 import matt.model.obj.single.SingleCall
@@ -16,7 +16,7 @@ object ComputeInputReporter {
 	every(5.sec) {
 	  println("ComputeCache Report")
 	  tab("Name\t\tSize\t\tFull")
-	  ComputeInput::class.mattSubClasses().forEach {
+	  GlobalRAMComputeInput::class.mattSubClasses().forEach {
 		val cache = (it.companionObjectInstance as ComputeCache<*, *>)
 		val s = if (cache.enableCache) cache.computeCache.size else "DISABLED"
 		tab(
