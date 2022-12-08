@@ -4,10 +4,11 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import matt.async.par.FutureMap
 import matt.caching.compcache.cache.ComputeCache
+import matt.caching.compcache.cache.ComputeCacheBase
 import matt.caching.compcache.cache.HardComputeCache
+import matt.caching.compcache.globalman.ComputeCacheManager
 import matt.caching.compcache.globalman.GlobalRAMComputeCacheManager
 import matt.caching.compcache.globalman.HardStorageCacheManager
-import matt.caching.compcache.globalman.RAMComputeCacheManager
 
 
 abstract class HardStorageComputeInput<O>: GlobalRAMComputeInput<O>() {
@@ -64,15 +65,15 @@ abstract class UpdaterComputeInput<K, V>: GlobalRAMComputeInput<Map<K, V>>() {
 
 
 abstract class GlobalRAMComputeInput<O>: ComputeInput<O>() {
-  override val cacheManager get() = GlobalRAMComputeCacheManager
+  override val cacheManager: ComputeCacheManager get() = GlobalRAMComputeCacheManager
 }
 
 sealed class ComputeInput<O> {
 
-  abstract val cacheManager: RAMComputeCacheManager
+  abstract val cacheManager: ComputeCacheManager
 
-  @Suppress("UNCHECKED_CAST") @PublishedApi internal val cache: ComputeCache<ComputeInput<O>, O> by lazy {
-	cacheManager[this] as ComputeCache<ComputeInput<O>, O>
+  @Suppress("UNCHECKED_CAST") @PublishedApi internal val cache: ComputeCacheBase<ComputeInput<O>, O> by lazy {
+	cacheManager[this] as ComputeCacheBase<ComputeInput<O>, O>
   }
 
 
