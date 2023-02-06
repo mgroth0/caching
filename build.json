@@ -1,5 +1,5 @@
 {
-  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
@@ -9,7 +9,7 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
-	  "path" : ":k:log:profile"
+	  "path" : ":k:log"
 	}
   ],
   "note" :         null
