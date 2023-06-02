@@ -1,6 +1,6 @@
 package matt.caching.compcache.reporter
 
-import matt.async.schedule.every
+import matt.async.thread.schedule.every
 import matt.caching.compcache.GlobalRAMComputeInput
 import matt.caching.compcache.cache.ComputeCache
 import matt.log.tab
