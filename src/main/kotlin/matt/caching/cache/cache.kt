@@ -1,6 +1,6 @@
 package matt.caching.cache
 
-import matt.lang.err
+import matt.lang.unsafeErr
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
 
@@ -49,10 +49,7 @@ class LRUCache<K, V>(private val cacheSize: Int) : LinkedHashMap<K, V>(16, 0.75f
 class AssertCache<K, V>(private val cacheSize: Int) : LinkedHashMap<K, V>(16, 0.75f, true) {
 
     override fun removeEldestEntry(eldest: Map.Entry<K, V>): Boolean {
-        return (size >= cacheSize).apply {
-            if (this) {
-                err("No. This program apparently can't handle a true LRU cache.")
-            }
-        }
+        unsafeErr("No. This program apparently can't handle a true LRU cache.")
+        return (size >= cacheSize)
     }
 }
