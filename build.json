@@ -8,8 +8,8 @@
         },
         {
             "type": "Project",
-            "cfg": "api",
-            "path": ":k:async:thread"
+            "cfg": "implementation",
+            "path": ":k:reflect"
         },
         {
             "type": "Project",

@@ -1,96 +1,189 @@
 package matt.caching.compcache
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import matt.async.par.FutureMap
-import matt.caching.compcache.cache.ComputeCache
 import matt.caching.compcache.cache.ComputeCacheBase
-import matt.caching.compcache.cache.HardComputeCache
 import matt.caching.compcache.globalman.ComputeCacheManager
-import matt.caching.compcache.globalman.GlobalRAMComputeCacheManager
-import matt.caching.compcache.globalman.HardStorageCacheManager
+import matt.caching.compcache.globalman.FakeCacheManager
+import matt.caching.compcache.globalman.RAMComputeCacheManager
+import matt.lang.go
+
+/*
+abstract class HardStorageComputeInput<O> : ComputeInput<O>() {
+
+    abstract override val cacheManager: HardStorageCacheManager
+
+    val stupidHardCache get() = cache as HardComputeCache<ComputeInput<O>, O>
+
+    private val cacheFile by lazy { stupidHardCache.cacheFile }
+
+    private fun loadCache(): ComputeCache<ComputeInput<O>, O> {
+        val s = cacheFile.text
+        return Json.decodeFromString(s)
+    }
+
+    context (ComputeCacheContext)
+    fun maybeLoad() {
+        val c = cache()
+        if (!c.isSetup && cacheFile.exists() && !cacheFile.isBlank()) {
+            stupidHardCache.load()
+            c.isSetup = true
+        }
+    }
+
+    context (ComputeCacheContext)
+    override fun preFindOrCompute() {
+        maybeLoad()
+    }
+
+}*/
 
 
-abstract class HardStorageComputeInput<O>: GlobalRAMComputeInput<O>() {
+abstract class UpdaterComputeInput<K, V> : ComputeInput<Map<K, V>, ComputeCacheContext>() {
+    context(ComputeCacheContext)
+    abstract fun futureMapBuilder(): FutureMap<K, V>
 
-  abstract override val cacheManager: HardStorageCacheManager
+    context(ComputeCacheContext)
+    override fun compute() = compute { }
 
-  val stupidHardCache get() = cache as HardComputeCache<ComputeInput<O>, O>
+    context(ComputeCacheContext)
+    inline fun compute(op: (Int) -> Unit): Map<K, V> {
+        val fm = futureMapBuilder()
+        fm.fill(op)
+        return fm.map
+    }
 
-  private val cacheFile by lazy { stupidHardCache.cacheFile }
+    context (ComputeCacheContext)
+    operator fun invoke(inPlaceUpdateOp: ((Int) -> Unit)) = findOrCompute(inPlaceUpdateOp)
 
-  private fun loadCache(): ComputeCache<GlobalRAMComputeInput<O>, O> {
-	val s = cacheFile.text
-	return Json.decodeFromString(s)
-  }
-
-  fun maybeLoad() {
-	if (!cache.isSetup && cacheFile.exists() && !cacheFile.isBlank()) {
-	  stupidHardCache.load()
-	  cache.isSetup = true
-	}
-  }
-
-
-  override fun preFindOrCompute() {
-	maybeLoad()
-  }
-
+    context (ComputeCacheContext)
+    inline fun findOrCompute(inPlaceUpdateOp: ((Int) -> Unit)): Map<K, V> {
+        val c = cache()
+        return if (!c.enableCache) {
+            compute(inPlaceUpdateOp)
+        } else run {
+            c[this] ?: compute(inPlaceUpdateOp).also {
+                if (!c.full) {
+                    c.full = !c.setIfNotFull(this, it)
+                }
+            }
+        }
+    }
 }
 
 
-abstract class UpdaterComputeInput<K, V>: GlobalRAMComputeInput<Map<K, V>>() {
-  abstract fun futureMapBuilder(): FutureMap<K, V>
-  override fun compute() = compute { }
-  inline fun compute(op: (Int)->Unit): Map<K, V> {
-	val fm = futureMapBuilder()
-	fm.fill(op)
-	return fm.map
-  }
+//abstract class GlobalRAMComputeInput<O> : ComputeInput<O>() {
+//    override val cacheManager: ComputeCacheManager get() = GlobalRAMComputeCacheManager
+//}
 
-  operator fun invoke(inPlaceUpdateOp: ((Int)->Unit)) = findOrCompute(inPlaceUpdateOp)
-
-  inline fun findOrCompute(inPlaceUpdateOp: ((Int)->Unit)): Map<K, V> {
-	return if (!cache.enableCache) {
-	  compute(inPlaceUpdateOp)
-	} else run {
-	  cache[this] ?: compute(inPlaceUpdateOp).also {
-		if (!cache.full) {
-		  cache.full = !cache.setIfNotFull(this, it)
-		}
-	  }
-	}
-  }
+interface ComputeCacheContext {
+    val cacheManager: ComputeCacheManager
 }
 
 
-abstract class GlobalRAMComputeInput<O>: ComputeInput<O>() {
-  override val cacheManager: ComputeCacheManager get() = GlobalRAMComputeCacheManager
+data class ComputeCacheContextImpl(override val cacheManager: ComputeCacheManager = RAMComputeCacheManager()) :
+    ComputeCacheContext
+
+abstract class FakeCacheComputeInput<O> : ComputeInput<O, FakeCacheManager>()
+abstract class GenericComputeInput<O> : ComputeInput<O, ComputeCacheContext>()
+
+sealed interface ComputeInputLike<O>
+
+abstract class ComputeInput<O, CCC : ComputeCacheContext> : ComputeInputLike<O> {
+
+//    abstract val cacheManager: ComputeCacheManager
+//
+//    @Suppress("UNCHECKED_CAST")
+//    @PublishedApi
+//    internal val cache: ComputeCacheBase<ComputeInput<O>, O> by lazy {
+//        cacheManager[this] as ComputeCacheBase<ComputeInput<O>, O>
+//    }
+
+
+    private var _cache: ComputeCacheBase<ComputeInput<O, *>, O>? = null
+
+
+    context (CCC)
+    @PublishedApi
+    internal fun cache(): ComputeCacheBase<ComputeInput<O, *>, O> {
+        _cache?.go { return it }
+        synchronized(this) {
+            _cache?.go { return it }
+            @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST")
+            (cacheManager[this] as ComputeCacheBase<ComputeInput<O, *>, O>).go {
+                _cache = it
+                return it
+            }
+        }
+    }
+
+    context (CCC)
+    abstract fun compute(): O
+
+    context (CCC)
+    operator fun invoke() = findOrCompute()
+
+    internal open fun preFindOrCompute() {}
+
+    context (CCC)
+    fun findOrCompute(): O {
+
+        preFindOrCompute()
+        val c = cache()
+        return if (!c.enableCache) {
+            compute()
+        } else run {
+            c[this] ?: compute().also {
+                if (!c.full) {
+                    c.full = !c.setIfNotFull(this, it)
+                }
+            }
+        }
+    }
 }
 
-sealed class ComputeInput<O> {
+abstract class GenericSuspendingComputeInput<O> : SuspendingComputeInput<O, ComputeCacheContext>()
 
-  abstract val cacheManager: ComputeCacheManager
+abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInputLike<O> {
 
-  @Suppress("UNCHECKED_CAST") @PublishedApi internal val cache: ComputeCacheBase<ComputeInput<O>, O> by lazy {
-	cacheManager[this] as ComputeCacheBase<ComputeInput<O>, O>
-  }
+    private var _cache: ComputeCacheBase<SuspendingComputeInput<O, *>, O>? = null
 
 
-  abstract fun compute(): O
-  operator fun invoke() = findOrCompute()
-  internal open fun preFindOrCompute() {}
-  fun findOrCompute(): O {
-	preFindOrCompute()
-	return if (!cache.enableCache) {
-	  compute()
-	} else run {
-	  cache[this] ?: compute().also {
-		if (!cache.full) {
-		  cache.full = !cache.setIfNotFull(this, it)
-		}
-	  }
-	}
-  }
+    context (CCC)
+    @PublishedApi
+    internal fun cache(): ComputeCacheBase<SuspendingComputeInput<O, *>, O> {
+        _cache?.go { return it }
+        synchronized(this) {
+            _cache?.go { return it }
+            @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST")
+            (cacheManager[this] as ComputeCacheBase<SuspendingComputeInput<O, *>, O>).go {
+                _cache = it
+                return it
+            }
+        }
+    }
+
+    context (CCC)
+    abstract suspend fun compute(): O
+
+    context (CCC)
+    suspend operator fun invoke() = findOrCompute()
+
+    internal open fun preFindOrCompute() {}
+
+    context (CCC)
+    suspend fun findOrCompute(): O {
+
+        preFindOrCompute()
+        val c = cache()
+        return if (!c.enableCache) {
+            compute()
+        } else run {
+            c[this] ?: compute().also {
+                if (!c.full) {
+                    c.full = !c.setIfNotFull(this, it)
+                }
+            }
+        }
+    }
 }
 
