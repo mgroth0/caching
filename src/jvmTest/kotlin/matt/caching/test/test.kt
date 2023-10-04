@@ -2,7 +2,7 @@ package matt.caching.test
 
 
 import matt.caching.cache.LRUCache
-import matt.test.JupiterTestAssertions.assertRunsInOneSecond
+import matt.test.assertions.JupiterTestAssertions.assertRunsInOneSecond
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

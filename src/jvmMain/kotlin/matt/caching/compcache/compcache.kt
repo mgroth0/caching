@@ -155,7 +155,7 @@ abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInp
         synchronized(this) {
             _cache?.go { return it }
             @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST")
-            (cacheManager[this] as ComputeCacheBase<SuspendingComputeInput<O, *>, O>).go {
+            (cacheManager [ this] as ComputeCacheBase<SuspendingComputeInput<O, *>, O>).go {
                 _cache = it
                 return it
             }
@@ -178,7 +178,9 @@ abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInp
         return if (!c.enableCache) {
             compute()
         } else run {
-            c[this] ?: compute().also {
+
+
+            c[ this] ?: compute().also {
                 if (!c.full) {
                     c.full = !c.setIfNotFull(this, it)
                 }

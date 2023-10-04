@@ -35,7 +35,14 @@ open class ComputeCache<I : ComputeInputLike<O>, O>(
     override var enableCache: Boolean = true
 ) : ComputeCacheBase<I, O>() {
     val computeCache = mutSemMapOf<I, O>(maxsize = MAX_CACHE_SIZE)
-    override operator fun get(input: I): O? = computeCache[input]
+    override operator fun get(input: I): O? {
+
+//        if (computeCache.size > 100) {
+//            println("debug here")
+//        }
+        return computeCache[input]
+    }
+
     override operator fun set(
         input: I,
         output: O

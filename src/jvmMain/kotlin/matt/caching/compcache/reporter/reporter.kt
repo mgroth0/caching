@@ -18,7 +18,7 @@ class ComputeInputReporter() {
         every(5.sec) {
             println("ComputeCache Report")
             tab("Name\t\tSize\t\tFull")
-            with(systemScope().usingClassGraph()) {
+            with(systemScope(includePlatformClassloader=false).usingClassGraph()) {
                 ComputeInput::class.mattSubClasses().forEach {
                     val cache = (it.companionObjectInstance as ComputeCache<*, *>)
                     val s = if (cache.enableCache) cache.computeCache.size else "DISABLED"
