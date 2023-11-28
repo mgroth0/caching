@@ -8,6 +8,7 @@ import matt.log.profile.stopwatch.stopwatch
 abstract class TimedComputeInput<O> : ComputeInput<O, ComputeCacheContext>() {
     private var theStopwatch: Stopwatch? = null
     protected open val stopwatchEnabled = true
+    context (ComputeCacheContext)
     final override fun compute(): O = stopwatch(this::class.simpleName!!, enabled = stopwatchEnabled) {
         theStopwatch = this
         val r = timedCompute()
