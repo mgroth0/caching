@@ -1,6 +1,5 @@
 package matt.caching.compcache
 
-import matt.async.par.FutureMap
 import matt.caching.compcache.cache.ComputeCacheBase
 import matt.caching.compcache.globalman.ComputeCacheManager
 import matt.caching.compcache.globalman.FakeCacheManager
@@ -40,7 +39,7 @@ abstract class HardStorageComputeInput<O> : ComputeInput<O>() {
 
 abstract class UpdaterComputeInput<K, V> : ComputeInput<Map<K, V>, ComputeCacheContext>() {
     context(ComputeCacheContext)
-    abstract fun futureMapBuilder(): FutureMap<K, V>
+    abstract fun futureMapBuilder(): Map<K, V>
 
     context(ComputeCacheContext)
     override fun compute() = compute { }
@@ -48,8 +47,7 @@ abstract class UpdaterComputeInput<K, V> : ComputeInput<Map<K, V>, ComputeCacheC
     context(ComputeCacheContext)
     inline fun compute(op: (Int) -> Unit): Map<K, V> {
         val fm = futureMapBuilder()
-        fm.fill(op)
-        return fm.map
+        return fm
     }
 
     context (ComputeCacheContext)
@@ -155,7 +153,7 @@ abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInp
         synchronized(this) {
             _cache?.go { return it }
             @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST")
-            (cacheManager [ this] as ComputeCacheBase<SuspendingComputeInput<O, *>, O>).go {
+            (cacheManager[this] as ComputeCacheBase<SuspendingComputeInput<O, *>, O>).go {
                 _cache = it
                 return it
             }
@@ -180,7 +178,7 @@ abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInp
         } else run {
 
 
-            c[ this] ?: compute().also {
+            c[this] ?: compute().also {
                 if (!c.full) {
                     c.full = !c.setIfNotFull(this, it)
                 }
