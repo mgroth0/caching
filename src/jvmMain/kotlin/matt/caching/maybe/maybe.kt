@@ -51,7 +51,7 @@ data object MapCacheFactory : CacheFactory {
 interface SuspendingMaybeCache<K, V : Any> {
     suspend fun getOrPut(
         key: K,
-        getter: () -> V
+        getter: suspend () -> V
     ): V
 }
 
