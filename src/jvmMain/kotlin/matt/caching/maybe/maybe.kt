@@ -1,5 +1,7 @@
 package matt.caching.maybe
 
+import matt.lang.model.value.Variable
+
 
 interface MaybeCache<K, V : Any> {
     fun getOrPut(
@@ -55,9 +57,16 @@ interface SuspendingMaybeCache<K, V : Any> {
     ): V
 }
 
+interface SuspendingMaybeCache2<V : Any> {
+    suspend fun getOrPut(
+        getter: suspend () -> V
+    ): V
+}
+
 interface SuspendingCacheFactory<T : Any> {
     val lifespan: kotlin.time.Duration
     suspend fun clear()
     fun <K, V : Any> createMaybeCache(subMapGetter: (T) -> MutableMap<K, V>): SuspendingMaybeCache<K, V>
+    fun <V : Any> createMaybeCache2(subMapGetter: (T) -> Variable<V?>): SuspendingMaybeCache2<V>
 }
 
