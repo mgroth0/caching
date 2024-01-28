@@ -42,7 +42,7 @@ abstract class UpdaterComputeInput<K, V> : ComputeInput<Map<K, V>, ComputeCacheC
     abstract fun futureMapBuilder(): Map<K, V>
 
     context(ComputeCacheContext)
-    override fun compute() = compute { }
+    final override fun compute() = compute { }
 
     context(ComputeCacheContext)
     inline fun compute(op: (Int) -> Unit): Map<K, V> {

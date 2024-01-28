@@ -3,12 +3,12 @@
   "dependencies": [
     {
       "type": "Project",
-      "cfg": "jvmMainApi",
+      "cfg": "commonJvmAndroidMainApi",
       "path": ":k:log:profile"
     },
     {
       "type": "Project",
-      "cfg": "jvmMainImplementation",
+      "cfg": "commonJvmAndroidMainImplementation",
       "path": ":k:reflect"
     },
     {
@@ -17,5 +17,8 @@
       "path": ":k:test"
     }
   ],
-  "jvm": {}
+  "jvm": {},
+  "android": {
+    "type": "Lib"
+  }
 }

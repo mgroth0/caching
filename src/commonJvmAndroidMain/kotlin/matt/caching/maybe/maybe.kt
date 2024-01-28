@@ -1,6 +1,7 @@
 package matt.caching.maybe
 
 import matt.lang.model.value.Variable
+import kotlin.time.Duration
 
 
 interface MaybeCache<K, V : Any> {
@@ -64,9 +65,28 @@ interface SuspendingMaybeCache2<V : Any> {
 }
 
 interface SuspendingCacheFactory<T : Any> {
-    val lifespan: kotlin.time.Duration
+    val lifespan: Duration?
     suspend fun clear()
     fun <K, V : Any> createMaybeCache(subMapGetter: (T) -> MutableMap<K, V>): SuspendingMaybeCache<K, V>
     fun <V : Any> createMaybeCache2(subMapGetter: (T) -> Variable<V?>): SuspendingMaybeCache2<V>
 }
 
+interface ExpiringSuspendingCacheFactory<T : Any> : SuspendingCacheFactory<T> {
+    override val lifespan: Duration
+}
+
+class MemorySuspendingCacheFactory<T : Any> : SuspendingCacheFactory<T> {
+    override val lifespan = null
+    override suspend fun clear() {
+        TODO("Not yet implemented")
+    }
+
+    override fun <V : Any> createMaybeCache2(subMapGetter: (T) -> Variable<V?>): SuspendingMaybeCache2<V> {
+        TODO("Not yet implemented")
+    }
+
+    override fun <K, V : Any> createMaybeCache(subMapGetter: (T) -> MutableMap<K, V>): SuspendingMaybeCache<K, V> {
+        TODO("Not yet implemented")
+    }
+
+}

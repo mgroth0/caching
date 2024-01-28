@@ -16,8 +16,8 @@ interface ComputeCacheManager {
     operator fun get(computeInput: ComputeInputLike<*>): ComputeCacheBase<*, *>
 }
 
-open class RAMComputeCacheManager : ComputeCacheManager {
-    override operator fun get(computeInput: ComputeInputLike<*>) = computeCaches[computeInput::class]!!
+abstract class BaseComputeCacheManager : ComputeCacheManager {
+    final override operator fun get(computeInput: ComputeInputLike<*>) = computeCaches[computeInput::class]!!
 
     @PublishedApi
     internal val computeCaches =
@@ -25,7 +25,10 @@ open class RAMComputeCacheManager : ComputeCacheManager {
             cacheFactory(theClass)
         }
 
-    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> {
+}
+
+open class RAMComputeCacheManager : BaseComputeCacheManager() {
+    final override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> {
         return ComputeCache<ComputeInputLike<Any?>, Any?>(
             cls
         ).also {
@@ -35,7 +38,7 @@ open class RAMComputeCacheManager : ComputeCacheManager {
 }
 
 
-class HardStorageCacheManager : RAMComputeCacheManager() {
+class HardStorageCacheManager : BaseComputeCacheManager() {
 
     override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCache<*, *> {
         return HardComputeCache<ComputeInputLike<Any?>, Any?>(

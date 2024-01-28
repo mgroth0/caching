@@ -32,10 +32,10 @@ class HardComputeCache<I : ComputeInputLike<O>, O>(
 
 open class ComputeCache<I : ComputeInputLike<O>, O>(
     protected val inputCls: KClass<ComputeInputLike<*>>,
-    override var enableCache: Boolean = true
+    final override var enableCache: Boolean = true
 ) : ComputeCacheBase<I, O>() {
     val computeCache = mutSemMapOf<I, O>(maxsize = MAX_CACHE_SIZE)
-    override operator fun get(input: I): O? {
+    final override operator fun get(input: I): O? {
 
 //        if (computeCache.size > 100) {
 //            println("debug here")
@@ -43,14 +43,14 @@ open class ComputeCache<I : ComputeInputLike<O>, O>(
         return computeCache[input]
     }
 
-    override operator fun set(
+    final override operator fun set(
         input: I,
         output: O
     ) {
         computeCache[input] = output
     }
 
-    override fun setIfNotFull(
+    final override fun setIfNotFull(
         input: I,
         output: O
     ) = computeCache.setIfNotFull(input, output)
