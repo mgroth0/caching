@@ -28,37 +28,29 @@ abstract class BaseComputeCacheManager : ComputeCacheManager {
 }
 
 open class RAMComputeCacheManager : BaseComputeCacheManager() {
-    final override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> {
-        return ComputeCache<ComputeInputLike<Any?>, Any?>(
-            cls
-        ).also {
-            it.isSetup = true
-        }
+    final override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> = ComputeCache<ComputeInputLike<Any?>, Any?>(
+        cls
+    ).also {
+        it.isSetup = true
     }
 }
 
 
 class HardStorageCacheManager : BaseComputeCacheManager() {
 
-    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCache<*, *> {
-        return HardComputeCache<ComputeInputLike<Any?>, Any?>(
-            cls
-        ).also {
-            it.isSetup = true
-        }
+    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCache<*, *> = HardComputeCache<ComputeInputLike<Any?>, Any?>(
+        cls
+    ).also {
+        it.isSetup = true
     }
 }
 
 
 object FakeCacheManager : ComputeCacheManager, ComputeCacheContext {
 
-    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> {
-        return FakeComputeCache<ComputeInputLike<Any?>, Any?>()
-    }
+    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> = FakeComputeCache<ComputeInputLike<Any?>, Any?>()
 
-    override fun get(computeInput: ComputeInputLike<*>): ComputeCacheBase<*, *> {
-        return FakeComputeCache<ComputeInputLike<Any?>, Any?>()
-    }
+    override fun get(computeInput: ComputeInputLike<*>): ComputeCacheBase<*, *> = FakeComputeCache<ComputeInputLike<Any?>, Any?>()
 
     override val cacheManager = this
 }

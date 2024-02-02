@@ -19,18 +19,14 @@ class MapCache<K, V : Any> private constructor(private val map: MutableMap<K, V>
     override fun getOrPut(
         key: K,
         getter: () -> V
-    ): V {
-        return map.getOrPut(key, getter)
-    }
+    ): V = map.getOrPut(key, getter)
 }
 
 class NotACache<K, V : Any> : MaybeCache<K, V> {
     override fun getOrPut(
         key: K,
         getter: () -> V
-    ): V {
-        return getter()
-    }
+    ): V = getter()
 }
 
 interface CacheFactory {
@@ -38,16 +34,12 @@ interface CacheFactory {
 }
 
 data object NoCacheFactory : CacheFactory {
-    override fun <K, V : Any> createMaybeCache(): MaybeCache<K, V> {
-        return NotACache()
-    }
+    override fun <K, V : Any> createMaybeCache(): MaybeCache<K, V> = NotACache()
 
 }
 
 data object MapCacheFactory : CacheFactory {
-    override fun <K, V : Any> createMaybeCache(): MaybeCache<K, V> {
-        return MapCache()
-    }
+    override fun <K, V : Any> createMaybeCache(): MaybeCache<K, V> = MapCache()
 }
 
 
