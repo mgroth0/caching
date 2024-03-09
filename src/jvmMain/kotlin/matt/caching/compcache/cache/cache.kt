@@ -4,7 +4,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import matt.async.safe.mutSemMapOf
 import matt.caching.compcache.ComputeInputLike
-import matt.file.commons.CACHE_FOLDER
+import matt.file.commons.reg.CACHE_FOLDER
 import kotlin.reflect.KClass
 
 const val MAX_CACHE_SIZE = 1_000_000
@@ -35,13 +35,7 @@ open class ComputeCache<I : ComputeInputLike<O>, O>(
     final override var enableCache: Boolean = true
 ) : ComputeCacheBase<I, O>() {
     val computeCache = mutSemMapOf<I, O>(maxsize = MAX_CACHE_SIZE)
-    final override operator fun get(input: I): O? {
-
-//        if (computeCache.size > 100) {
-//            println("debug here")
-//        }
-        return computeCache[input]
-    }
+    final override operator fun get(input: I): O? = computeCache[input]
 
     final override operator fun set(
         input: I,

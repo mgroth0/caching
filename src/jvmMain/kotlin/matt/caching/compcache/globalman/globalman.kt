@@ -9,7 +9,6 @@ import matt.caching.compcache.cache.HardComputeCache
 import matt.collect.map.lazyMutableMap
 import kotlin.reflect.KClass
 
-//val GlobalRAMComputeCacheManager = RAMComputeCacheManager()
 
 interface ComputeCacheManager {
     fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *>
@@ -24,25 +23,26 @@ abstract class BaseComputeCacheManager : ComputeCacheManager {
         lazyMutableMap<KClass<ComputeInputLike<*>>, ComputeCacheBase<*, *>> { theClass ->
             cacheFactory(theClass)
         }
-
 }
 
 open class RAMComputeCacheManager : BaseComputeCacheManager() {
-    final override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> = ComputeCache<ComputeInputLike<Any?>, Any?>(
-        cls
-    ).also {
-        it.isSetup = true
-    }
+    final override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> =
+        ComputeCache<ComputeInputLike<Any?>, Any?>(
+            cls
+        ).also {
+            it.isSetup = true
+        }
 }
 
 
 class HardStorageCacheManager : BaseComputeCacheManager() {
 
-    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCache<*, *> = HardComputeCache<ComputeInputLike<Any?>, Any?>(
-        cls
-    ).also {
-        it.isSetup = true
-    }
+    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCache<*, *> =
+        HardComputeCache<ComputeInputLike<Any?>, Any?>(
+            cls
+        ).also {
+            it.isSetup = true
+        }
 }
 
 

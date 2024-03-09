@@ -35,7 +35,6 @@ interface CacheFactory {
 
 data object NoCacheFactory : CacheFactory {
     override fun <K, V : Any> createMaybeCache(): MaybeCache<K, V> = NotACache()
-
 }
 
 data object MapCacheFactory : CacheFactory {
@@ -80,5 +79,4 @@ class MemorySuspendingCacheFactory<T : Any> : SuspendingCacheFactory<T> {
     override fun <K, V : Any> createMaybeCache(subMapGetter: (T) -> MutableMap<K, V>): SuspendingMaybeCache<K, V> {
         TODO("Not yet implemented")
     }
-
 }

@@ -2,11 +2,10 @@ package matt.caching.test
 
 
 import matt.caching.cache.LRUCache
-import matt.test.Tests
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CachingTests: Tests() {
+class CachingTests {
 
     @Test
     fun lruCacheDoesRemove() {

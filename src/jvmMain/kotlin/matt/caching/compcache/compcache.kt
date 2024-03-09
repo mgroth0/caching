@@ -4,7 +4,7 @@ import matt.caching.compcache.cache.ComputeCacheBase
 import matt.caching.compcache.globalman.ComputeCacheManager
 import matt.caching.compcache.globalman.FakeCacheManager
 import matt.caching.compcache.globalman.RAMComputeCacheManager
-import matt.lang.go
+import matt.lang.common.go
 
 /*
 abstract class HardStorageComputeInput<O> : ComputeInput<O>() {
@@ -69,9 +69,6 @@ abstract class UpdaterComputeInput<K, V> : ComputeInput<Map<K, V>, ComputeCacheC
 }
 
 
-//abstract class GlobalRAMComputeInput<O> : ComputeInput<O>() {
-//    override val cacheManager: ComputeCacheManager get() = GlobalRAMComputeCacheManager
-//}
 
 interface ComputeCacheContext {
     val cacheManager: ComputeCacheManager
@@ -88,13 +85,6 @@ sealed interface ComputeInputLike<O>
 
 abstract class ComputeInput<O, CCC : ComputeCacheContext> : ComputeInputLike<O> {
 
-//    abstract val cacheManager: ComputeCacheManager
-//
-//    @Suppress("UNCHECKED_CAST")
-//    @PublishedApi
-//    internal val cache: ComputeCacheBase<ComputeInput<O>, O> by lazy {
-//        cacheManager[this] as ComputeCacheBase<ComputeInput<O>, O>
-//    }
 
 
     private var _cache: ComputeCacheBase<ComputeInput<O, *>, O>? = null
