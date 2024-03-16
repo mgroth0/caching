@@ -4,70 +4,10 @@ import matt.caching.compcache.cache.ComputeCacheBase
 import matt.caching.compcache.globalman.ComputeCacheManager
 import matt.caching.compcache.globalman.FakeCacheManager
 import matt.caching.compcache.globalman.RAMComputeCacheManager
+import matt.lang.cast.Caster
 import matt.lang.common.go
-
-/*
-abstract class HardStorageComputeInput<O> : ComputeInput<O>() {
-
-    abstract override val cacheManager: HardStorageCacheManager
-
-    val stupidHardCache get() = cache as HardComputeCache<ComputeInput<O>, O>
-
-    private val cacheFile by lazy { stupidHardCache.cacheFile }
-
-    private fun loadCache(): ComputeCache<ComputeInput<O>, O> {
-        val s = cacheFile.text
-        return Json.decodeFromString(s)
-    }
-
-    context (ComputeCacheContext)
-    fun maybeLoad() {
-        val c = cache()
-        if (!c.isSetup && cacheFile.exists() && !cacheFile.isBlank()) {
-            stupidHardCache.load()
-            c.isSetup = true
-        }
-    }
-
-    context (ComputeCacheContext)
-    override fun preFindOrCompute() {
-        maybeLoad()
-    }
-
-}*/
-
-
-abstract class UpdaterComputeInput<K, V> : ComputeInput<Map<K, V>, ComputeCacheContext>() {
-    context(ComputeCacheContext)
-    abstract fun futureMapBuilder(): Map<K, V>
-
-    context(ComputeCacheContext)
-    final override fun compute() = compute { }
-
-    context(ComputeCacheContext)
-    inline fun compute(op: (Int) -> Unit): Map<K, V> {
-        val fm = futureMapBuilder()
-        return fm
-    }
-
-    context (ComputeCacheContext)
-    operator fun invoke(inPlaceUpdateOp: ((Int) -> Unit)) = findOrCompute(inPlaceUpdateOp)
-
-    context (ComputeCacheContext)
-    inline fun findOrCompute(inPlaceUpdateOp: ((Int) -> Unit)): Map<K, V> {
-        val c = cache()
-        return if (!c.enableCache) {
-            compute(inPlaceUpdateOp)
-        } else run {
-            c[this] ?: compute(inPlaceUpdateOp).also {
-                if (!c.full) {
-                    c.full = !c.setIfNotFull(this, it)
-                }
-            }
-        }
-    }
-}
-
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 
 interface ComputeCacheContext {
@@ -87,51 +27,82 @@ abstract class ComputeInput<O, CCC : ComputeCacheContext> : ComputeInputLike<O> 
 
 
 
-    private var _cache: ComputeCacheBase<ComputeInput<O, *>, O>? = null
+    @PublishedApi
+    internal var _cache2: ComputeCacheBase<*, *>? = null
 
 
     context (CCC)
     @PublishedApi
-    internal fun cache(): ComputeCacheBase<ComputeInput<O, *>, O> {
-        _cache?.go { return it }
+    internal fun cache(): ComputeCacheBase<*, *> {
+        _cache2?.go { return it }
         synchronized(this) {
-            _cache?.go { return it }
-            @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST")
-            (cacheManager[this] as ComputeCacheBase<ComputeInput<O, *>, O>).go {
+            _cache2?.go { return it }
+            val got = cacheManager[this]
+            _cache2 = got
+            return got
+          /*  (cacheManager[this] as ComputeCacheBase<ComputeInput<O, *>, O>).go {
+
                 _cache = it
                 return it
-            }
+            }*/
         }
     }
 
     context (CCC)
     abstract fun compute(): O
 
-    context (CCC)
-    operator fun invoke() = findOrCompute()
 
+    @PublishedApi
     internal open fun preFindOrCompute() {}
+}
 
-    context (CCC)
-    fun findOrCompute(): O {
+context (CCC)
+inline operator fun <reified O: Any, CCC, I: ComputeInput<out O, CCC>> I.invoke() = findOrCompute()
 
-        preFindOrCompute()
-        val c = cache()
-        return if (!c.enableCache) {
-            compute()
-        } else run {
-            c[this] ?: compute().also {
-                if (!c.full) {
-                    c.full = !c.setIfNotFull(this, it)
+
+
+context (CCC)
+inline fun <reified O: Any, CCC, I: ComputeInput<out O, CCC>> I.findOrCompute(): O =
+    findOrCompute {
+        it as O
+    }
+
+context (CCC)
+fun <O: Any, CCC, I: ComputeInput<out O, CCC>> I.findOrCompute(cls: KClass<O>): O =
+    findOrCompute {
+        cls.cast(it)
+    }
+
+context (CCC)
+fun <O: Any, CCC, I: ComputeInput<out O, CCC>> I.findOrCompute(caster: Caster<O>): O =
+    findOrCompute {
+        caster.cast(it)
+    }
+
+context (CCC)
+fun <O: Any, CCC, I: ComputeInput<out O, CCC>> I.findOrCompute(cast: (Any?) -> O): O {
+    preFindOrCompute()
+    val c = cache()
+    return if (!c.enableCache) {
+        compute()
+    } else run {
+        val c2 = _cache2!!
+        val r =
+            c2.get2(this) ?: compute().also {
+                if (!c2.full) {
+                    c2.full = !c2.setIfNotFull2(this, it)
                 }
             }
-        }
+        cast(r)
+        /*c[this] ?: compute().also {
+            if (!c.full) {
+                c.full = !c.setIfNotFull(this, it)
+            }
+        }*/
     }
 }
 
-abstract class GenericSuspendingComputeInput<O> : SuspendingComputeInput<O, ComputeCacheContext>()
-
-abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInputLike<O> {
+/*abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInputLike<O> {
 
     private var _cache: ComputeCacheBase<SuspendingComputeInput<O, *>, O>? = null
 
@@ -175,5 +146,5 @@ abstract class SuspendingComputeInput<O, CCC : ComputeCacheContext> : ComputeInp
             }
         }
     }
-}
+}*/
 

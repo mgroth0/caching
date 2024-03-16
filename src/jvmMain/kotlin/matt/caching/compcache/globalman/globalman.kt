@@ -5,7 +5,6 @@ import matt.caching.compcache.ComputeInputLike
 import matt.caching.compcache.cache.ComputeCache
 import matt.caching.compcache.cache.ComputeCacheBase
 import matt.caching.compcache.cache.FakeComputeCache
-import matt.caching.compcache.cache.HardComputeCache
 import matt.collect.map.lazyMutableMap
 import kotlin.reflect.KClass
 
@@ -14,6 +13,8 @@ interface ComputeCacheManager {
     fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *>
     operator fun get(computeInput: ComputeInputLike<*>): ComputeCacheBase<*, *>
 }
+
+
 
 abstract class BaseComputeCacheManager : ComputeCacheManager {
     final override operator fun get(computeInput: ComputeInputLike<*>) = computeCaches[computeInput::class]!!
@@ -27,24 +28,12 @@ abstract class BaseComputeCacheManager : ComputeCacheManager {
 
 open class RAMComputeCacheManager : BaseComputeCacheManager() {
     final override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCacheBase<*, *> =
-        ComputeCache<ComputeInputLike<Any?>, Any?>(
+        ComputeCache<ComputeInputLike<Any>, Any>(
             cls
         ).also {
             it.isSetup = true
         }
 }
-
-
-class HardStorageCacheManager : BaseComputeCacheManager() {
-
-    override fun cacheFactory(cls: KClass<ComputeInputLike<*>>): ComputeCache<*, *> =
-        HardComputeCache<ComputeInputLike<Any?>, Any?>(
-            cls
-        ).also {
-            it.isSetup = true
-        }
-}
-
 
 object FakeCacheManager : ComputeCacheManager, ComputeCacheContext {
 
